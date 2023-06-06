@@ -12,16 +12,18 @@
 <body>
   <div class="login">
         <div class="form-container">
-            <form action= "" method ="post" class="form">
+            <form action= "" method ="POST" class="form">
+                {% csrf_token %}
 
-                <label for="email" class="label">Correo </label>
+                {{form}}
+                <!--<label for="email" class="label">Correo </label>
                 <input type="text" name="username" id="" placeholder="juan.perez@teamco.com.co" class="input input-email" required autofocus>
 
                 <label for="password" class="label">Contraseña</label>
-                <input type="password" id="new-password" name="contrasena" placeholder="*********" class="input input-password" required>
-
+                <input type="password" id="new-password" name="contrasena" placeholder="*********" class="input input-password" required>-->
+                
                 <button type="submit" class="btn btn-info login-button">
-                    <a href='/vistasol'>Iniciar Sesión </a>
+                    <a>Iniciar Sesión </a>
                 </button>
 
             </form>

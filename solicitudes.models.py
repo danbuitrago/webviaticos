@@ -8,13 +8,30 @@
 from django.db import models
 
 
-class Aprobacion(models.Model):
-    idaprobacion = models.AutoField(primary_key=True)
-    aprobador = models.CharField(max_length=45)
+class Aprobadores(models.Model):
+    idaprobadores = models.IntegerField(primary_key=True)
+    nombreaprobador1 = models.CharField(max_length=45)
+    nombreaprobador2 = models.CharField(max_length=45)
+    fechadeaprobacion1 = models.DateTimeField()
+    fechadeaprobacion2 = models.CharField(max_length=45)
+    solicitante = models.CharField(max_length=45)
+    correoaprob1 = models.CharField(max_length=45)
+    correoaprob2 = models.CharField(max_length=45)
 
     class Meta:
         managed = False
-        db_table = 'aprobacion'
+        db_table = 'aprobadores'
+
+
+class AprobadoresHasSolicitudes(models.Model):
+    aprobadores_idaprobadores = models.OneToOneField(Aprobadores, models.DO_NOTHING, db_column='aprobadores_idaprobadores', primary_key=True)  # The composite primary key (aprobadores_idaprobadores, solicitudes_idsolicitudes, solicitudes_usuarios_idusuario) found, that is not supported. The first column is selected.
+    solicitudes_idsolicitudes = models.ForeignKey('Solicitudes', models.DO_NOTHING, db_column='solicitudes_idsolicitudes')
+    solicitudes_usuarios_idusuario = models.ForeignKey('Solicitudes', models.DO_NOTHING, db_column='solicitudes_usuarios_idusuario', to_field='usuarios_idusuario', related_name='aprobadoreshassolicitudes_solicitudes_usuarios_idusuario_set')
+
+    class Meta:
+        managed = False
+        db_table = 'aprobadores_has_solicitudes'
+        unique_together = (('aprobadores_idaprobadores', 'solicitudes_idsolicitudes', 'solicitudes_usuarios_idusuario'),)
 
 
 class AuthGroup(models.Model):
@@ -131,23 +148,39 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class Solicitud(models.Model):
-    idsolicitud = models.AutoField(primary_key=True)
-    descripcion = models.CharField(max_length=45)
-    usuario_idusuario = models.ForeignKey('Usuario', models.DO_NOTHING, db_column='usuario_idusuario')
+class Solicitudes(models.Model):
+    idsolicitudes = models.IntegerField(primary_key=True)  # The composite primary key (idsolicitudes, usuarios_idusuario) found, that is not supported. The first column is selected.
+    fechasolicitud = models.DateTimeField()
+    solicitante = models.CharField(max_length=45)
+    tiposolicitud = models.CharField(max_length=45)
+    descripcionsol = models.CharField(max_length=45)
+    tecnico2 = models.CharField(max_length=45)
+    responsabledeposito = models.CharField(max_length=45)
+    actividad = models.CharField(max_length=45)
+    departamento = models.CharField(max_length=45)
+    municipio = models.CharField(max_length=45)
+    diasviaticos = models.IntegerField()
+    diashotel = models.IntegerField()
+    asigespeciales = models.CharField(max_length=45, blank=True, null=True)
+    valorasigespeciales = models.CharField(max_length=45, blank=True, null=True)
     estado = models.IntegerField()
-    aprobacion_idaprobacion = models.ForeignKey(Aprobacion, models.DO_NOTHING, db_column='aprobacion_idaprobacion')
+    usuarios_idusuario = models.ForeignKey('Usuarios', models.DO_NOTHING, db_column='usuarios_idusuario')
 
     class Meta:
         managed = False
-        db_table = 'solicitud'
+        db_table = 'solicitudes'
+        unique_together = (('idsolicitudes', 'usuarios_idusuario'),)
 
 
-class Usuario(models.Model):
-    idusuario = models.AutoField(primary_key=True)
+class Usuarios(models.Model):
+    idusuario = models.IntegerField(primary_key=True)
     nombre = models.CharField(max_length=45)
+    correo = models.CharField(max_length=45)
     contrasena = models.CharField(max_length=45)
+    rol = models.CharField(max_length=45)
+    regional = models.CharField(max_length=45)
+    cargo = models.CharField(max_length=45)
 
     class Meta:
         managed = False
-        db_table = 'usuario'
+        db_table = 'usuarios'

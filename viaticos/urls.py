@@ -21,10 +21,12 @@ from solicitudes import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', views.signup, name='signup'),
-    path('', views.login, name='login'),
+    path('accounts/login/', views.login, name='login'),
     path('vistasol/', views.vistasol, name='vistasol'),
     path('vistasol/crearsol/', views.crearsol, name='crearsol'),
     path('vistacom/', views.vistacom, name='vistacom'),
     path('vistacom/crearcom/', views.crearcom, name='crearcom'),
-    #path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/login/', include('django.contrib.auth.urls')),
+    path('logout/', views.signout, name='logout'),
+    path('base/', views.base, name='base'),
 ]
